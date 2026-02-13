@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Flower Bloom</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="landing">
+    <button id="loveBtn" aria-label="Enter">❤</button>
+    <div class="hint">Click the love button</div>
+  </div>
+
+  <div id="stage" aria-hidden="true"></div>
+
+  <div id="controls" aria-hidden="true">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div id="message" aria-hidden="true"></div>
+
+  <div id="instruction" aria-hidden="true">Click on the screen and collect your flowers</div>
+
+  <div id="valentineOverlay" aria-hidden="true">
+    <svg viewBox="0 0 100 100" class="floating-heart">
+      <path d="M50,85 C20,65 10,50 10,40 C10,28 18,20 28,20 C35,20 42,25 50,32 C58,25 65,20 72,20 C82,20 90,28 90,40 C90,50 80,65 50,85 Z" fill="#ff1493"/>
+    </svg>
+    <div class="valentine-text">Happy Valentine's Day</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
