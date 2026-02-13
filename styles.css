@@ -1,0 +1,69 @@
+*{box-sizing:border-box}
+html,body,#stage{height:100%;margin:0}
+body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,#f8fbff,#fff);overflow:hidden;touch-action:none;font-size:clamp(14px,2vw,18px)}
+#stage{position:relative;width:100%;height:100%}
+.flower{position:absolute;left:0;top:0;transform:translate(-50%,-50%);pointer-events:none}
+svg.bloomTarget{width:110px;height:110px;display:block;transform-origin:50% 50%;transform:scale(0);opacity:0;transition:transform 700ms cubic-bezier(.2,1,.2,1),opacity 220ms}
+svg.bloomTarget.bloom{transform:scale(1);opacity:1}
+.fade{transition:all 400ms ease;opacity:0;transform:translateY(-20px) scale(.9)}
+
+/* small shadow under the bloom */
+.bloom-shadow{filter:drop-shadow(0 6px 10px rgba(0,0,0,0.08));}
+
+/* Landing / heart button */
+#landing{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff7fb,#fff);z-index:40}
+#loveBtn{width:clamp(100px,40vmin,180px);height:clamp(100px,40vmin,180px);border-radius:50%;border:0;background:radial-gradient(circle at 30% 30%,#ff5d8f,#ff2d6f);color:white;font-size:clamp(40px,20vmin,80px);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.12);animation:bite 1200ms infinite}
+.hint{margin-top:clamp(10px,5vw,20px);color:#666;font-size:clamp(12px,2.5vw,16px)}
+
+@keyframes bite{
+ 0%{transform:scale(1)}
+ 40%{transform:scale(1.08)}
+ 60%{transform:scale(0.96)}
+ 100%{transform:scale(1)}
+}
+
+/* Controls bottom center */
+#controls{position:fixed;left:50%;bottom:clamp(14px,5vw,40px);transform:translateX(-50%);display:flex;gap:clamp(8px,2vw,16px);z-index:30;flex-wrap:wrap;justify-content:center;width:90%;max-width:500px}
+#controls button{padding:clamp(10px,2.5vw,16px) clamp(16px,3vw,24px);border-radius:999px;border:0;background:#fff;color:#222;box-shadow:0 6px 18px rgba(0,0,0,0.08);cursor:pointer;font-size:clamp(14px,2vw,18px);font-weight:500;white-space:nowrap}
+
+/* Flower falling animation */
+.flower.fall{animation:fall 1400ms ease-in forwards}
+@keyframes fall{
+	to{transform:translate(-50%, calc(120vh)) rotate(40deg);opacity:0}
+}
+
+/* message overlay */
+#message{position:fixed;left:50%;top:20%;transform:translateX(-50%);background:rgba(255,255,255,0.96);padding:clamp(12px,3vw,24px) clamp(18px,4vw,32px);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);font-size:clamp(16px,3vw,24px);z-index:50;display:none;max-width:90%;max-width:clamp(200px,80vw,400px)}
+
+/* instruction text */
+#instruction{position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);background:rgba(255,255,255,0.96);padding:clamp(14px,4vw,28px) clamp(20px,5vw,36px);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);font-size:clamp(16px,3vw,22px);z-index:50;display:none;max-width:90%;max-width:clamp(220px,85vw,450px)}
+
+/* Valentine overlay */
+#valentineOverlay{position:fixed;inset:0;background:linear-gradient(135deg,rgba(255,240,245,0.95),rgba(255,200,221,0.95));display:none;z-index:20;align-items:center;justify-content:center;flex-direction:column;pointer-events:none}
+#valentineOverlay.show{display:flex}
+.floating-heart{width:clamp(120px,30vmin,240px);height:clamp(120px,30vmin,240px);opacity:0.3;position:absolute;top:10%;left:50%;transform:translateX(-50%);animation:float 3s ease-in-out infinite}
+.valentine-text{font-size:clamp(24px,6vw,40px);font-weight:bold;color:#ff1493;text-shadow:2px 2px 4px rgba(255,255,255,0.8);z-index:21;text-align:center;padding:0 20px}
+
+@keyframes float{
+  0%, 100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-20px)}
+}
+
+/* stage with valentine background */
+#stage.valentine{background:linear-gradient(135deg,rgba(255,240,245,0.8),rgba(255,200,221,0.8));position:fixed}
+
+/* Continue allowing flower blooming on stage after Yes */
+#stage.valentine.blooming{pointer-events:auto}
+
+/* Responsive breakpoints for mobile devices */
+@media (max-width:480px) {
+  #controls{width:95%}
+  #message{max-width:95%}
+  #instruction{max-width:95%}
+}
+
+@media (max-width:320px) {
+  #loveBtn{width:clamp(80px,35vmin,140px);height:clamp(80px,35vmin,140px)}
+  .hint{margin-top:10px}
+}
+
