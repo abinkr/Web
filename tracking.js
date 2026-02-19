@@ -61,31 +61,69 @@
     }
 
     function render(){
-      const interactions = getInteractions().slice().reverse();
+      const interactions = getInteractions();
+      const reversed = interactions.slice().reverse();
       logsEl.innerHTML = '';
-      if(interactions.length === 0){
+      if(reversed.length === 0){
         logsEl.innerHTML = '<div class="log-item">No events recorded yet.</div>';
         return;
       }
-      interactions.forEach(item =>{
+      reversed.forEach((item, i) =>{
         const div = document.createElement('div');
         div.className = 'log-item';
+
         let msg = item.action || '';
-        // Human-friendly messages for yes/no clicks
         if(item.action === 'YES_BUTTON_CLICKED') msg = 'User clicked YES button';
         if(item.action === 'NO_BUTTON_CLICKED') msg = 'User clicked NO button';
         if(item.action === 'LOVE_BUTTON_CLICKED') msg = 'User clicked LOVE (entered app)';
         if(item.action === 'FLOWER_CREATED') msg = `Flower created at (${item.details?.x || '-'}, ${item.details?.y || '-'})`;
         if(item.action === 'SCREEN_TAP_COUNTED') msg = `Tap counted during No phase — currentCount: ${item.details?.currentCount ?? ''}`;
         if(item.action === 'NO_COUNT_COLLECTED') msg = `No count collected: ${item.details?.totalCount ?? ''}`;
+
         const time = formatTimestamp(item.timestamp || new Date().toISOString());
         const ua = item.details?.userAgent || item.userAgent || navigator.userAgent;
         const dev = detectDevice(ua);
         const screenText = item.details?.screenSize || (dev.screenWidth && dev.screenHeight ? `${dev.screenWidth}x${dev.screenHeight}` : 'unknown');
         const deviceText = `${dev.type} / ${dev.os} / ${screenText}`;
-        div.textContent = `${time} — ${deviceText} — ${msg}`;
+
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.flexDirection = 'column';
+        left.style.gap = '4px';
+
+        const line = document.createElement('div');
+        line.textContent = `${time} — ${msg}`;
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = deviceText;
+
+        left.appendChild(line);
+        left.appendChild(meta);
+
+        const controls = document.createElement('div');
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = 'Delete';
+        // compute original index in stored array
+        const originalIndex = interactions.length - 1 - i;
+        delBtn.addEventListener('click', ()=>{
+          if(!confirm('Delete this log entry?')) return;
+          deleteEntry(originalIndex);
+        });
+        controls.appendChild(delBtn);
+
+        div.appendChild(left);
+        div.appendChild(controls);
         logsEl.appendChild(div);
       });
+    }
+
+    function deleteEntry(index){
+      const arr = getInteractions();
+      if(index < 0 || index >= arr.length) return;
+      arr.splice(index, 1);
+      localStorage.setItem('userInteractions', JSON.stringify(arr));
+      render();
     }
 
     logoutBtn.addEventListener('click', ()=>{
