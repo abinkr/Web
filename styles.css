@@ -76,5 +76,15 @@ svg.bloomTarget.bloom{transform:scale(1);opacity:1}
 .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .btn{display:inline-block;padding:10px 16px;border-radius:999px;border:0;background:#ff2d6f;color:#fff;font-weight:600;cursor:pointer}
 .log-list{display:flex;flex-direction:column;gap:8px}
+/* allow scrolling when there are many log entries */
+.log-list{
+  max-height:60vh;
+  overflow:auto;
+  padding-right:8px;
+}
+
+/* make sure scrollable area is visually separated on small screens */
+.log-list::-webkit-scrollbar{width:10px}
+.log-list::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:8px}
 .log-item{padding:10px;border-radius:8px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.04);font-size:14px}
 
