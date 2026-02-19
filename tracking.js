@@ -12,6 +12,20 @@
     try{ return raw? JSON.parse(raw) : []; }catch(e){ return []; }
   }
 
+  // Basic device detection from userAgent
+  function detectDevice(ua){
+    ua = ua || (navigator && navigator.userAgent) || '';
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    const type = isMobile ? 'Mobile' : 'Desktop';
+    let os = 'Unknown';
+    if(/Windows NT/i.test(ua)) os = 'Windows';
+    else if(/Android/i.test(ua)) os = 'Android';
+    else if(/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+    else if(/Mac OS X|Macintosh/i.test(ua)) os = 'macOS';
+    else if(/Linux/i.test(ua)) os = 'Linux';
+    return { type, os, ua };
+  }
+
   // If we're on login page
   const loginForm = document.getElementById('loginForm');
   if(loginForm){
@@ -23,7 +37,7 @@
         sessionStorage.setItem('isAdmin', '1');
         // record admin login event
         const interactions = getInteractions();
-        interactions.push({ timestamp: new Date().toISOString(), action: 'ADMIN_LOGIN', details: { user: u } });
+        interactions.push({ timestamp: new Date().toISOString(), action: 'ADMIN_LOGIN', details: { user: u, userAgent: navigator.userAgent } });
         localStorage.setItem('userInteractions', JSON.stringify(interactions));
         window.location.href = 'tracking.html';
       } else {
@@ -62,7 +76,10 @@
         if(item.action === 'SCREEN_TAP_COUNTED') msg = `Tap counted during No phase — currentCount: ${item.details?.currentCount ?? ''}`;
         if(item.action === 'NO_COUNT_COLLECTED') msg = `No count collected: ${item.details?.totalCount ?? ''}`;
         const time = formatTimestamp(item.timestamp || new Date().toISOString());
-        div.textContent = `${time} — ${msg}`;
+        const ua = item.details?.userAgent || item.userAgent || navigator.userAgent;
+        const dev = detectDevice(ua);
+        const deviceText = `${dev.type} / ${dev.os}`;
+        div.textContent = `${time} — ${deviceText} — ${msg}`;
         logsEl.appendChild(div);
       });
     }
