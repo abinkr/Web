@@ -86,5 +86,8 @@ svg.bloomTarget.bloom{transform:scale(1);opacity:1}
 /* make sure scrollable area is visually separated on small screens */
 .log-list::-webkit-scrollbar{width:10px}
 .log-list::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:8px}
-.log-item{padding:10px;border-radius:8px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.04);font-size:14px}
+.log-item{padding:10px;border-radius:8px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.04);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.log-item .meta{color:#666;font-size:13px;margin-right:12px}
+.delete-btn{background:#e74c3c;border-radius:8px;padding:6px 10px;font-size:13px;border:0;color:#fff;cursor:pointer}
+.delete-btn:hover{opacity:0.95}
 
