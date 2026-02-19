@@ -12,7 +12,7 @@
     try{ return raw? JSON.parse(raw) : []; }catch(e){ return []; }
   }
 
-  // Basic device detection from userAgent
+  // Basic device detection from userAgent and screen size
   function detectDevice(ua){
     ua = ua || (navigator && navigator.userAgent) || '';
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
@@ -23,7 +23,9 @@
     else if(/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
     else if(/Mac OS X|Macintosh/i.test(ua)) os = 'macOS';
     else if(/Linux/i.test(ua)) os = 'Linux';
-    return { type, os, ua };
+    const screenWidth = (window && window.screen && window.screen.width) ? window.screen.width : null;
+    const screenHeight = (window && window.screen && window.screen.height) ? window.screen.height : null;
+    return { type, os, ua, screenWidth, screenHeight };
   }
 
   // If we're on login page
@@ -37,7 +39,8 @@
         sessionStorage.setItem('isAdmin', '1');
         // record admin login event
         const interactions = getInteractions();
-        interactions.push({ timestamp: new Date().toISOString(), action: 'ADMIN_LOGIN', details: { user: u, userAgent: navigator.userAgent } });
+        const screenSize = (window && window.screen) ? `${window.screen.width}x${window.screen.height}` : null;
+        interactions.push({ timestamp: new Date().toISOString(), action: 'ADMIN_LOGIN', details: { user: u, userAgent: navigator.userAgent, screenSize } });
         localStorage.setItem('userInteractions', JSON.stringify(interactions));
         window.location.href = 'tracking.html';
       } else {
@@ -78,7 +81,8 @@
         const time = formatTimestamp(item.timestamp || new Date().toISOString());
         const ua = item.details?.userAgent || item.userAgent || navigator.userAgent;
         const dev = detectDevice(ua);
-        const deviceText = `${dev.type} / ${dev.os}`;
+        const screenText = item.details?.screenSize || (dev.screenWidth && dev.screenHeight ? `${dev.screenWidth}x${dev.screenHeight}` : 'unknown');
+        const deviceText = `${dev.type} / ${dev.os} / ${screenText}`;
         div.textContent = `${time} — ${deviceText} — ${msg}`;
         logsEl.appendChild(div);
       });
